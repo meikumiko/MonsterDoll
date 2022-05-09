@@ -10,7 +10,7 @@ import UIKit
 extension ViewController: UIScrollViewDelegate{
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         //此 function 將在 ScrollView 滑動停止時呼叫
-        
+
         //pageChange是我的ScrollView的名稱，contentOffset.x是目前滑動的水平距離，bounds.width是ScrollView設定的寬度，所以兩者相除會得到滑動的距離應該是ScrollView的第幾頁，對應到pageControl的第幾個圓點
         let pageNum = pageChange.contentOffset.x / pageChange.bounds.width
         pageControl.currentPage = Int(pageNum)
