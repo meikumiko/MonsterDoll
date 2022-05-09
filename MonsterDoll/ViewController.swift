@@ -9,6 +9,9 @@ import UIKit
 
 extension ViewController: UIScrollViewDelegate{
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        //此 function 將在 ScrollView 滑動停止時呼叫
+        
+        //pageChange是我的ScrollView的名稱，contentOffset.x是目前滑動的水平距離，bounds.width是ScrollView設定的寬度，所以兩者相除會得到滑動的距離應該是ScrollView的第幾頁，對應到pageControl的第幾個圓點
         let pageNum = pageChange.contentOffset.x / pageChange.bounds.width
         pageControl.currentPage = Int(pageNum)
     }
@@ -30,6 +33,7 @@ class ViewController: UIViewController {
         didSet{
             bodyButton.configurationUpdateHandler = {
                 bodyButton in bodyButton.alpha = bodyButton.isSelected ? 1 : 0.3
+                // 1 : 0.3，代表按鈕在 isSelected 狀態時的透明度是1，normol 狀態時透明度是 0.3
             }
         }
     }
@@ -145,6 +149,7 @@ class ViewController: UIViewController {
     @IBAction func chooseBodyParts(_ sender: UIButton){
         switch sender{
         case bodyButton:
+            //設定身體部位按鈕的狀態，選到的變成 isSelected
             bodyButton.isSelected = true
             eyesButton.isSelected = false
             mouthButton.isSelected = false
@@ -152,12 +157,14 @@ class ViewController: UIViewController {
             legsButton.isSelected = false
             accButton.isSelected = false
             
+            //用for迴圈將身形的所有圖片依序設為button顯示的圖片，一共有9張，所以i的範圍是0~8；Asset中的圖片因為我給的編號是1~9，所以呼叫時要用i+1才對得上
             for i in 0...8{
                 bodyPartsChoiceButton[i].configuration?.image = UIImage(named: "bodyIcon-\(i+1)")
             }
             
+            //身形跟眼睛是必選項目，所以隱藏最後一個的不選擇按鈕
             bodyPartsChoiceButton[9].configuration?.image = nil
-            
+            //身體可以更換顏色，所以顯示調色盤，在未點選調色盤時隱藏調色畫面
             paletteButton.isHidden = false
             colorView.isHidden = true
             
@@ -291,6 +298,7 @@ class ViewController: UIViewController {
     
     
     @IBAction func changePage(_ sender: Any) {
+        //設定點選pageControl的圓點時，ScrollView的移動位置(scrollview的寬度*pageControl的頁數)
         let point = CGPoint(x: pageChange.bounds.width * CGFloat(pageControl.currentPage), y: 0)
         pageChange.setContentOffset(point, animated: true)
         
@@ -298,13 +306,15 @@ class ViewController: UIViewController {
     
     
     @IBAction func randomAppearance(_ sender: Any) {
-        
+        //所有部位在1~9的範圍內隨機選擇一個數字的圖片來顯示
         bodyImageView.image = UIImage(named: "body-\(Int.random(in: 1...9))")
         eyesImageView.image = UIImage(named: "eyes-\(Int.random(in: 1...9))")
         mouthImageView.image = UIImage(named: "mouth-\(Int.random(in: 1...9))")
         armsImageView.image = UIImage(named: "arms-\(Int.random(in: 1...9))")
         legsImageView.image = UIImage(named: "legs-\(Int.random(in: 1...9))")
         accImageView.image = UIImage(named: "acc-\(Int.random(in: 1...9))")
+        
+        //隨機配置身體顏色，用剛剛建立好的randomColor function
         randomColor((Any).self)
                                       
     }
@@ -324,12 +334,15 @@ class ViewController: UIViewController {
     
     
     @IBAction func randomColor(_ sender: Any) {
+        //設定三個範圍在0~1的隨機浮點數分別給紅色、綠色跟藍色
         let redValue = Float.random(in: 0...1)
         let greenValue = Float.random(in: 0...1)
         let blueValue = Float.random(in: 0...1)
         
+        //將亂數設定為身體顏色
         bodyColorView.backgroundColor = UIColor(red: CGFloat(redValue), green: CGFloat(greenValue), blue: CGFloat(blueValue), alpha: 1)
         
+        //同步更新slider的圓點顯示位置
         redSlider.value = redValue
         greenSlider.value = greenValue
         blueSlider.value = blueValue
